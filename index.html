@@ -20,19 +20,14 @@
 
       const { client_secret } = await r.json();
 
-      const chat = await OpenAIChatKit.create({
+      const chat = await window.OpenAI.ChatKit.create({
         clientSecret: client_secret
       });
 
       chat.mount(document.getElementById("chat-container"));
     }
- 
+
     window.addEventListener("load", startChat);
   </script>
 </body>
-
 </html>
-
-
-
-
