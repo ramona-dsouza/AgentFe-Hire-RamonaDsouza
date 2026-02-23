@@ -4,28 +4,33 @@
   <meta charset="UTF-8">
   <title>Hire Ramona Agent</title>
 </head>
+
 <body>
-    <h1>Hire Ramona Agent</h1>
-    <div>
-        <input id="input" placeholder="Ask me anything..." />
-        <button onclick="send()">Send</button>
-        <div id="output"></div>
-      </div>
-      
-      <script>
-      async function send() {
-        const userText = document.getElementById("input").value;
-        const r = await fetch("https://agent-be-hire-ramona-dsouza.vercel.app/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: userText })
-        });
-        const data = await r.json();
-        document.getElementById("output").innerText = data.reply;
-      }
-      </script>
-      
+  <h1>Hire Ramona Agent</h1>
+
+  <div id="chat-container"></div>
+
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"></script>
+
+  <script>
+    async function startChat() {
+      const r = await fetch("https://agent-be-hire-ramona-dsouza.vercel.app/api/session", {
+        method: "POST"
+      });
+
+      const { client_secret } = await r.json();
+
+      const chat = await OpenAIChatKit.create({
+        clientSecret: client_secret
+      });
+
+      chat.mount(document.getElementById("chat-container"));
+    }
+
+    startChat();
+  </script>
 </body>
+
 </html>
 
 
