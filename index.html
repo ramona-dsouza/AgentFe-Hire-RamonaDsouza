@@ -103,7 +103,7 @@
           setReply(data.error || data.message || `Error ${res.status}`, true);
           return;
         }
-        setReply(data.reply ?? "");
+        setReply(data.reply != null ? String(data.reply) : "");
       } catch (err) {
         setReply(err.message || "Request failed", true);
       } finally {
