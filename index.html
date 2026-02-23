@@ -73,8 +73,9 @@
   </div>
   <div class="reply" id="reply"></div>
 
+  <script src="config.js"></script>
   <script>
-    const API_URL = "https://agent-be-hire-ramona-dsouza.vercel.app/api/chat";
+    const API_URL = window.API_BASE_URL;
     const messageEl = document.getElementById("message");
     const sendBtn = document.getElementById("send");
     const replyEl = document.getElementById("reply");
