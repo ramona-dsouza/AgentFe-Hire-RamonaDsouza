@@ -1,28 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hire Ramona Agent</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 36rem;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      flex: 1;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    input:focus {
+      outline: none;
+      border-color: #666;
+    }
+    button {
+      padding: 0.6rem 1rem;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover { background: #333; }
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+    .reply {
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 4rem;
+    }
+    .reply:empty::before {
+      content: "Reply will appear here.";
+      color: #999;
+    }
+    .error { color: #c00; }
+  </style>
 </head>
 <body>
   <h1>Hire Ramona Agent</h1>
-  <div id="chat-container"></div>
+  <div class="input-row">
+    <input type="text" id="message" placeholder="Type a message..." enterkeyhint="send" autocomplete="off">
+    <button type="button" id="send">Send</button>
+  </div>
+  <div class="reply" id="reply"></div>
 
   <script>
-    async function startChat() {
-      const r = await fetch("https://agent-be-hire-ramona-dsouza.vercel.app/api/session", {
-        method: "POST"
-      });
-      const { client_secret } = await r.json();
+    const API_URL = "https://agent-be-hire-ramona-dsouza.vercel.app/api/chat";
+    const messageEl = document.getElementById("message");
+    const sendBtn = document.getElementById("send");
+    const replyEl = document.getElementById("reply");
 
-      const chat = await OpenAIChatKit.create({
-        clientSecret: client_secret
-      });
-
-      chat.mount(document.getElementById("chat-container"));
+    function setReply(text, isError) {
+      replyEl.textContent = text;
+      replyEl.classList.toggle("error", !!isError);
     }
-  </script>
 
-  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" onload="startChat()"></script>
+    async function sendMessage() {
+      const message = messageEl.value.trim();
+      if (!message) return;
+
+      sendBtn.disabled = true;
+      setReply("");
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          setReply(data.error || data.message || `Error ${res.status}`, true);
+          return;
+        }
+        setReply(data.reply ?? "");
+      } catch (err) {
+        setReply(err.message || "Request failed", true);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    messageEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
 </body>
 </html>
