@@ -10,7 +10,7 @@
 
   <div id="chat-container"></div>
 
-  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"></script>
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" defer></script>
 
   <script>
     async function startChat() {
@@ -26,8 +26,8 @@
 
       chat.mount(document.getElementById("chat-container"));
     }
-
-    startChat();
+ 
+    window.addEventListener("load", startChat);
   </script>
 </body>
 
