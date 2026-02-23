@@ -4,30 +4,25 @@
   <meta charset="UTF-8">
   <title>Hire Ramona Agent</title>
 </head>
-
 <body>
   <h1>Hire Ramona Agent</h1>
-
   <div id="chat-container"></div>
-
-  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" defer></script>
 
   <script>
     async function startChat() {
       const r = await fetch("https://agent-be-hire-ramona-dsouza.vercel.app/api/session", {
         method: "POST"
       });
-
       const { client_secret } = await r.json();
 
-      const chat = await window.OpenAI.ChatKit.create({
+      const chat = await OpenAIChatKit.create({
         clientSecret: client_secret
       });
 
       chat.mount(document.getElementById("chat-container"));
     }
-
-    window.addEventListener("load", startChat);
   </script>
+
+  <script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" onload="startChat()"></script>
 </body>
 </html>
